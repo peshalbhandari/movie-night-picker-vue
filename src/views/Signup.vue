@@ -75,7 +75,7 @@ export default {
    async signUpWithEmailAndPassword() {
         this.isLoading=true;
         try {
-            let authRes= await firebase.auth().createUserWithEmailAndPassword(this.email,this.password);
+            let authRes= await firebase.auth().createUserWithEmailAndPassword(this.email.toLowerCase(),this.password);
             await db.collection('users')
             .doc(authRes.user.uid)
             .set({name:this.name,email:this.email});
@@ -83,7 +83,8 @@ export default {
             this.$store.dispatch('user/setUserData',{
                 id:authRes.user.uid,
                 email:this.email,
-                name:this.name
+                name:this.name,
+                partnerId:''
             });
 
             this.$router.replace({name:'Home'});
