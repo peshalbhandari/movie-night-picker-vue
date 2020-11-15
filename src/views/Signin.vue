@@ -13,7 +13,7 @@
         :rules="[rules.required]"
       ></v-text-field>
     </v-form>
-    <v-alert v-if="errorMsg" color="red" border="top" class="ml-5 mr-5" close-icon>{{errorMsg}}</v-alert>
+    <v-alert  v-if="errorMsg" color="red" border="top" class="ml-5 mr-5" close-icon>{{errorMsg}}</v-alert>
     <v-divider></v-divider>
     <v-card-actions>
       <v-btn text @click="$refs.form.reset()">Reset</v-btn>
@@ -44,13 +44,14 @@ export default {
     async  SignInWithEmailAndPassword(){
           this.isLoading=true;
           try {
-              const authRes=await firebase.auth().signInWithEmailAndPassword(this.email,this.password);
+              const authRes=await firebase.auth().signInWithEmailAndPassword(this.email.toLowerCase(),this.password);
               const dbUser=await db.collection('users').doc(authRes.user.uid).get();
               const userData=dbUser.data();
               this.$store.dispatch('user/setUserData',{
                   id:dbUser.id,
                   name:userData.name,
-                  email:userData.email
+                  email:userData.email,
+                  partnerId:userData.partnerId||''
 
               });
               this.$router.replace({name:'Home'});
